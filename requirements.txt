@@ -25,6 +25,7 @@ ptyprocess==0.6.0
 Pygments==2.6.1
 PyMySQL==0.9.3
 pytz==2019.3
+qiniu==7.2.7
 redis==3.4.1
 requests==2.23.0
 six==1.14.0
