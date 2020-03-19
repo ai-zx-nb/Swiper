@@ -15,7 +15,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "swiper.settings")
 django.setup()
 
 from user.models import User
-# from vip.models import Vip, Permission, VipPermRelation
+from vip.models import Vip, Permission, VipPermRelation
 
 
 last_names = (
@@ -91,7 +91,7 @@ def init_permission():
 
 def init_vip():
     vip_data = (
-        ('非会员', 0, 0, 0),
+        ('非会员', 0, 36500, 0),
 
         ('青铜会员(月卡)', 1, 30, 10),
         ('青铜会员(季卡)', 1, 180, 50),

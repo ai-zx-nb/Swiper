@@ -28,3 +28,4 @@ SwipeRepeatErr = gen_logic_err('SwipeRepeatErr', 1006)  # 重复滑动
 RewindLimitErr = gen_logic_err('RewindLimitErr', 1007)  # 反悔次数达到限制
 RewindTimeout = gen_logic_err('RewindTimeout', 1008)    # 反悔超时
 NonSwipe = gen_logic_err('NonSwipe', 1009)              # 当前还没有滑动记录
+PermRequired = gen_logic_err('PermRequired', 1010)      # 用户不具有某权限

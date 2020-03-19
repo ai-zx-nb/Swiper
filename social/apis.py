@@ -2,6 +2,7 @@ from libs.http import render_json
 from social import logics
 from social.models import Friend
 from user.models import User
+from vip.logics import perm_require
 
 
 def rcmd_user(request):
@@ -18,6 +19,7 @@ def like(request):
     return render_json({'is_matched': is_matched})
 
 
+@perm_require('superlike')
 def superlike(request):
     '''超级喜欢 (上滑)'''
     sid = int(request.POST.get('sid', 0))
@@ -32,6 +34,7 @@ def dislike(request):
     return render_json()
 
 
+@perm_require('rewind')
 def rewind(request):
     '''反悔最后一次的滑动
 
@@ -42,6 +45,7 @@ def rewind(request):
     return render_json()
 
 
+@perm_require('who_liked_me')
 def show_users_liked_me(request):
     '''查看都有谁喜欢过我的人
 
