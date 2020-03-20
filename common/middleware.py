@@ -6,11 +6,14 @@
                    |
                   检查
 '''
+import logging
 
 from django.utils.deprecation import MiddlewareMixin
 
 from libs.http import render_json
 from common import err
+
+errlog = logging.getLogger('err')
 
 
 class AuthMiddleware(MiddlewareMixin):
@@ -37,4 +40,5 @@ class StatusCodeMiddleware(MiddlewareMixin):
     '''状态码处理中间件'''
     def process_exception(self, request, exception):
         if isinstance(exception, err.LogicError):
+            errlog.warning(f'LogicError: {exception.code} : {exception.data}')
             return render_json(exception.data, exception.code)
