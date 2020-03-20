@@ -71,3 +71,20 @@ class Redis(_Redis):
 
 
 rds = Redis(**REDIS)  # Redis 连接的单例
+
+
+def cache_response(view_func):
+    '''直接缓存视图函数的结果'''
+    def wrapper(result, *args, **kwargs):
+        func_name = view_func.__name__
+        session_id = request.session.session_key
+        key = f'Response-{func_name}-{session_id}'
+
+        response = rds.get(key)
+
+        if response is None:
+            response = view_func(result, *args, **kwargs)
+            if response.status_code == 200:
+                rds.set(key, response, 300)  # 将 Response 添加到缓存
+        return response
+    return wrapper
