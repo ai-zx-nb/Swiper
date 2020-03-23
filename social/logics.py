@@ -3,6 +3,7 @@ import datetime
 
 from django.db.transaction import atomic
 
+from swiper import conf
 from common import err
 from common import keys
 from libs.cache import rds
@@ -51,6 +52,24 @@ def rcmd_users(uid):
     return users_from_q | users_from_db
 
 
+def record_swipe_to_rds(uid, sid, stype):
+    '''在执行滑动时，将必要数据写入 redis'''
+    name = keys.FIRST_RCMD_Q % uid
+    with rds.pipeline() as pipe:
+        # 开启 Redis 事务
+        pipe.watch(name, keys.HOT_RANK_K)
+        pipe.multi()
+
+        # 强制从 优先推荐队列 删除 sid
+        pipe.lrem(name, 1, sid)
+
+        # 处理滑动积分
+        score = conf.SWIPE_SCORE[stype]
+        pipe.zincrby(keys.HOT_RANK_K, score, sid)
+
+        pipe.execute()
+
+
 def like_someone(uid, sid):
     '''喜欢(右滑)了某人'''
     # 检查 sid 是否正确
@@ -59,9 +78,7 @@ def like_someone(uid, sid):
 
     Swiped.swipe(uid, sid, 'like')
 
-    # 强制从 优先推荐队列 删除 sid
-    name = keys.FIRST_RCMD_Q % uid
-    rds.lrem(name, 1, sid)
+    record_swipe_to_rds(uid, sid, 'like')
 
     # 检查对方是否 喜欢 过自己，如果是，匹配成好友
     if Swiped.is_liked(sid, uid):
@@ -79,9 +96,7 @@ def superlike_someone(uid, sid):
 
     Swiped.swipe(uid, sid, 'superlike')
 
-    # 强制从 优先推荐队列 删除 sid
-    my_first_q = keys.FIRST_RCMD_Q % uid
-    rds.lrem(my_first_q, 1, sid)
+    record_swipe_to_rds(uid, sid, 'superlike')
 
     # 检查对方是否 喜欢 过自己，如果是，匹配成好友
     is_liked = Swiped.is_liked(sid, uid)
@@ -104,9 +119,7 @@ def dislike_someone(uid, sid):
 
     Swiped.swipe(uid, sid, 'dislike')
 
-    # 强制从 优先推荐队列 删除 sid
-    my_first_q = keys.FIRST_RCMD_Q % uid
-    rds.lrem(my_first_q, 1, sid)
+    record_swipe_to_rds(uid, sid, 'dislike')
 
 
 def rewind_swipe(uid):

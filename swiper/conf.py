@@ -9,6 +9,15 @@ REDIS = {
     # 'password': None
 }
 
+
+# 滑动积分配置
+SWIPE_SCORE = {
+    'like': 5,
+    'superlike': 7,
+    'dislike': -5,
+}
+
+
 # 云之讯配置
 YZX_API = 'https://open.ucpaas.com/ol/sms/sendsms'
 YZX_VCODE_ARGS = {
@@ -19,6 +28,7 @@ YZX_VCODE_ARGS = {
     'mobile': None,
     'param': None,
 }
+
 
 # 七牛云配置
 QN_ACCESS_KEY = 'kEM0sRR-meB92XU43_a6xZqhiyyTuu5yreGCbFtw'
