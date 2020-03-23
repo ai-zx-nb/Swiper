@@ -184,3 +184,34 @@ def who_liked_me(uid):
                              .values_list('uid', flat=True)
 
     return User.objects.filter(id__in=uid_list)
+
+
+def get_top_n(num):
+    '''获取全服热度前 N 的用户数据'''
+    # 从 Redis 中取出原始排行数据
+    origin_data = rds.zrevrange(keys.HOT_RANK_K, 0, num - 1, withscores=True)
+
+    # 对原始排名数据进行类型转换
+    # rank_data = [
+    #   [53, 4953],
+    #   [60, 4852],
+    #   [96, 4814],
+    #   [11, 4586],
+    #   ...
+    # ]
+    rank_data = [[int(uid), int(score)] for uid, score in origin_data]
+
+    # 取出每一项的 uid, 获取每个用户的信息
+    uid_list = [uid for uid, _ in rank_data]
+    users = User.objects.filter(id__in=uid_list)
+    users = sorted(users, key=lambda user: uid_list.index(user.id))  # 将 users 按照 uid_list 的顺序排列
+
+    # 组装结果数据
+    result = {}
+    for idx, user in enumerate(users):
+        rank = idx + 1
+        user_info = user.to_dict(exclude=['phonenum', 'birthday', 'location', 'vip_id', 'vip_end'])
+        user_info['score'] = rank_data[idx][1]
+        result[rank] = user_info
+
+    return result

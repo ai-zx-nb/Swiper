@@ -70,3 +70,18 @@ def friends(request):
     users = User.objects.filter(id__in=fid_list)
     result = [user.to_dict() for user in users]
     return render_json(result)
+
+
+def hot_rank(request):
+    '''
+    查看全服人气热度前 50 的用户
+
+    Return:
+        rank_data = {
+            '1': {'score': 81623, 'nickname': xxx, 'avatar': xxxx, 'id': xx, 'gender': xx},
+            '2': {'score': 73223, 'nickname': xxx, 'avatar': xxxx, 'id': xx, 'gender': xx},
+            '3': {'score': 63529, 'nickname': xxx, 'avatar': xxxx, 'id': xx, 'gender': xx},
+        }
+    '''
+    rank_data = logics.get_top_n(50)
+    return render_json(rank_data)
