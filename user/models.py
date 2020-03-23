@@ -64,17 +64,6 @@ class User(models.Model):
         now = datetime.datetime.now()
         return now >= self.vip_end
 
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'phonenum': self.phonenum,
-            'nickname': self.nickname,
-            'gender': self.gender,
-            'birthday': str(self.birthday),
-            'avatar': self.avatar,
-            'location': self.location,
-        }
-
 
 class Profile(models.Model):
     '''交友资料'''
@@ -91,17 +80,3 @@ class Profile(models.Model):
     vibration = models.BooleanField(default=True, verbose_name='开启震动')
     only_matched = models.BooleanField(default=True, verbose_name='不让陌生人看我的相册')
     auto_play = models.BooleanField(default=True, verbose_name='自动播放视频')
-
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'dating_gender': self.dating_gender,
-            'dating_location': self.dating_location,
-            'min_distance': self.min_distance,
-            'max_distance': self.max_distance,
-            'min_dating_age': self.min_dating_age,
-            'max_dating_age': self.max_dating_age,
-            'vibration': self.vibration,
-            'only_matched': self.only_matched,
-            'auto_play': self.auto_play,
-        }
