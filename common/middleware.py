@@ -21,6 +21,7 @@ class AuthMiddleware(MiddlewareMixin):
     white_list = [
         '/api/user/get_vcode',
         '/api/user/submit_vcode',
+        '/api/social/hot_rank',
     ]
 
     def process_request(self, request):
