@@ -1,4 +1,5 @@
 #!/bin/bash
+# 一键部署脚本
 
 # 系统更新
 system_update() {
@@ -41,8 +42,8 @@ install_nginx() {
     if ! which nginx > /dev/null
     then
         wget -P /tmp 'http://nginx.org/download/nginx-1.16.1.tar.gz'
-        tar -xzf /tmp/nginx-1.14.1.tar.gz -C /tmp
-        cd /tmp/nginx-1.14.1
+        tar -xzf /tmp/nginx-1.16.1.tar.gz -C /tmp
+        cd /tmp/nginx-1.16.1
         ./configure
         make && make install
         cd -
@@ -106,17 +107,17 @@ echo -e 'pyenv 配置完毕.\n'
 }
 
 
-# 编译安装 Python 3.6.7
+# 编译安装 Python 3.6.9
 install_python() {
     echo '正在安装 Python 3.6'
-    if ! pyenv versions|grep 3.6.7 > /dev/null;
+    if ! pyenv versions|grep 3.6.9 > /dev/null;
     then
-        pyenv install -v 3.6.7
-        echo -e 'Python 3.6.7 安装完毕.\n'
+        pyenv install -v 3.6.9
+        echo -e 'Python 3.6.9 安装完毕.\n'
     else
-        echo 'Python 3.6.7 已存在'
+        echo 'Python 3.6.9 已存在'
     fi
-    pyenv global 3.6.7
+    pyenv global 3.6.9
 }
 
 
@@ -124,7 +125,7 @@ install_python() {
 project_init() {
     echo '正在设置项目环境...'
     proj='/opt/swiper/'
-    mkdir -p $proj/{data,logs}
+    mkdir -p $proj/logs
 
     echo '正在创建 python 运行环境...'
     if [ ! -d $proj/.venv ]; then
