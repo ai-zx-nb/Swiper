@@ -13,7 +13,7 @@ rsync -crvP --exclude={.git,.venv,logs,__pycache__} $LOCAL_DIR $USER@$HOST:$REMO
 read -p '是否要重启远程服务器? (y / n) ' restart
 
 if [[ $restart == 'y' || $restart == 'Y' ]]; then
-    exec /opt/swiper/scripts/restart.sh
+    ssh $USER@$HOST 'exec /opt/swiper/scripts/restart.sh'
 else
     echo 'Bye'
 fi

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PROJECT_DIR="./"
+PROJECT_DIR="/opt/swiper"
 PID_FILE="$PROJECT_DIR/logs/gunicorn.pid"
 
 if [ -f $PID_FILE ]; then
